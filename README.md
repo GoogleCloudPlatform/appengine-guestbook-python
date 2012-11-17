@@ -1,9 +1,9 @@
 # Guestbook
 
 Guestbook is an example application showing basic usage of Google App
-Engine. The users can read, login and write text messages. Messages
-are stored in App Engine NoSQL Datastore and retrieved using a
-strongly consistent query.
+Engine. The users can read, log in using their Google Account and
+write text messages. Messages are stored in App Engine NoSQL Datastore
+and retrieved using a strongly consistent query.
 
 ## Products
 - [App Engine][1]
