@@ -50,7 +50,7 @@ class Guestbook(webapp2.RequestHandler):
         greeting.put()
         self.redirect('/')
 
-application = webapp2.WSGIApplication(
-                                     [('/', MainPage),
-                                      ('/sign', Guestbook)],
-                                     debug=True)
+application = webapp2.WSGIApplication([
+    ('/', MainPage),
+    ('/sign', Guestbook),
+], debug=True)
