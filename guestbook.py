@@ -11,7 +11,7 @@ from google.appengine.ext import ndb
 # However, the write rate should be limited to ~1/second.
 
 def guestbook_key(guestbook_name='default_guestbook'):
-  return ndb.Key('Guestbook', guestbook_name)
+    return ndb.Key('Guestbook', guestbook_name)
 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
