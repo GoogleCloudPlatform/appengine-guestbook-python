@@ -20,7 +20,7 @@ High Replication Datastore (HRD) and retrieved using a strongly consistent
 - [webapp2][5]
 - [jinja2][6]
 
-[1]: https://developers.google.com
+[1]: https://developers.google.com/appengine
 [2]: https://python.org
 [3]: https://developers.google.com/appengine/docs/python/ndb/
 [4]: https://developers.google.com/appengine/docs/python/users/
