@@ -15,7 +15,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 # entity group. Queries across the single entity group will be consistent.
 # However, the write rate should be limited to ~1/second.
 
-def guestbook_key(guestbook_name='default_guestbook'):
+def guestbook_key(guestbook_name):
     return ndb.Key('Guestbook', guestbook_name)
 
 
@@ -28,7 +28,7 @@ class Greeting(ndb.Model):
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
-        guestbook_name = self.request.get('guestbook_name')
+        guestbook_name = self.request.get('guestbook_name', 'default_guestbook')
         greetings_query = Greeting.query(
             ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
         greetings = greetings_query.fetch(10)
