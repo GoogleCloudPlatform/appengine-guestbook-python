@@ -52,7 +52,7 @@ class MainPage(webapp2.RequestHandler):
 
         template_values = {
             'greetings': greetings,
-            'guestbook_name': urllib.urlencode(guestbook_name),
+            'guestbook_name': urllib.quote_plus(guestbook_name),
             'url': url,
             'url_linktext': url_linktext,
         }
