@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 {% autoescape true %}
 <html>
-
-  <head>
-    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-  </head>
-
   <body>
     {% for greeting in greetings %}
       {% if greeting.author %}
@@ -16,9 +11,16 @@
       <blockquote>{{ greeting.content }}</blockquote>
     {% endfor %}
 
-    <form action="/sign" method="post">
+    <form action="/sign?guestbook_name={{ guestbook_name }}" method="post">
       <div><textarea name="content" rows="3" cols="60"></textarea></div>
       <div><input type="submit" value="Sign Guestbook"></div>
+    </form>
+
+    <hr>
+
+    <form>Guestbook name:
+      <input value="{{ guestbook_name }}" name="guestbook_name">
+      <input type="submit" value="switch">
     </form>
 
     <a href="{{ url|safe }}">{{ url_linktext }}</a>

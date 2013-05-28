@@ -1,3 +1,4 @@
+
 import os
 import urllib
 
@@ -7,28 +8,37 @@ from google.appengine.ext import ndb
 import jinja2
 import webapp2
 
+
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'])
+
+
+DEFAULT_GUESTBOOK_NAME = 'default_guestbook'
+
 
 # We set a parent key on the 'Greetings' to ensure that they are all in the same
 # entity group. Queries across the single entity group will be consistent.
 # However, the write rate should be limited to ~1/second.
 
-def guestbook_key(guestbook_name):
+def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
+    """Constructs a Datastore key for a Guestbook entity with guestbook_name."""
     return ndb.Key('Guestbook', guestbook_name)
 
 
 class Greeting(ndb.Model):
+    """Models an individual Guestbook entry with author, content, and date."""
     author = ndb.UserProperty()
     content = ndb.StringProperty(indexed=False)
     date = ndb.DateTimeProperty(auto_now_add=True)
 
 
+
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
-        guestbook_name = self.request.get('guestbook_name', 'default_guestbook')
+        guestbook_name = self.request.get('guestbook_name',
+                                          DEFAULT_GUESTBOOK_NAME)
         greetings_query = Greeting.query(
             ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
         greetings = greetings_query.fetch(10)
@@ -42,12 +52,14 @@ class MainPage(webapp2.RequestHandler):
 
         template_values = {
             'greetings': greetings,
+            'guestbook_name': urllib.urlencode(guestbook_name),
             'url': url,
             'url_linktext': url_linktext,
         }
 
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render(template_values))
+
 
 
 class Guestbook(webapp2.RequestHandler):
@@ -57,7 +69,8 @@ class Guestbook(webapp2.RequestHandler):
         # is in the same entity group. Queries across the single entity group
         # will be consistent. However, the write rate to a single entity group
         # should be limited to ~1/second.
-        guestbook_name = self.request.get('guestbook_name')
+        guestbook_name = self.request.get('guestbook_name',
+                                          DEFAULT_GUESTBOOK_NAME)
         greeting = Greeting(parent=guestbook_key(guestbook_name))
 
         if users.get_current_user():
