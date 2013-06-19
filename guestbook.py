@@ -94,7 +94,7 @@ class MainPage(webapp2.RequestHandler):
 
 class Guestbook(webapp2.RequestHandler):
     def post(self):
-        # We set the same parent key on the 'Greeting' to ensure each greeting
+        # We set the same parent key on the 'Greeting' to ensure each Greeting
         # is in the same entity group. Queries across the single entity group
         # will be consistent. However, the write rate to a single entity group
         # should be limited to ~1/second.
