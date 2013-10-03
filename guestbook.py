@@ -6,22 +6,14 @@ from google.appengine.api import users
 from google.appengine.ext import ndb
 # [END import_ndb]
 
+import jinja2
 import webapp2
 
-MAIN_PAGE_FOOTER_TEMPLATE = """\
-    <form action="/sign?%s" method="post">
-      <div><textarea name="content" rows="3" cols="60"></textarea></div>
-      <div><input type="submit" value="Sign Guestbook"></div>
-    </form>
-    <hr>
-    <form>Guestbook name:
-      <input value="%s" name="guestbook_name">
-      <input type="submit" value="switch">
-    </form>
-    <a href="%s">%s</a>
-  </body>
-</html>
-"""
+JINJA_ENVIRONMENT = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    extensions=['jinja2.ext.autoescape'],
+    autoescape=True)
+
 
 DEFAULT_GUESTBOOK_NAME = 'default_guestbook'
 
