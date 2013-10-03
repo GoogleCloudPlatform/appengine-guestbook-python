@@ -15,7 +15,8 @@ def guestbook_key(guestbook_name='default_guestbook'):
 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
-    extensions=['jinja2.ext.autoescape'])
+    extensions=['jinja2.ext.autoescape'],
+    autoescape=True)
 
 class Greeting(ndb.Model):
     author = ndb.UserProperty()
