@@ -1,4 +1,5 @@
-import cgi
+# [START imports]
+import os
 import urllib
 
 from google.appengine.api import users
@@ -13,7 +14,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
-
+# [END imports]
 
 DEFAULT_GUESTBOOK_NAME = 'default_guestbook'
 
@@ -83,13 +84,17 @@ class MainPage(webapp2.RequestHandler):
             url = users.create_login_url(self.request.uri)
             url_linktext = 'Login'
 
-        # Write the submission form and the footer of the page
-        sign_query_params = urllib.urlencode({'guestbook_name':
-                                              guestbook_name})
-        self.response.write(MAIN_PAGE_FOOTER_TEMPLATE %
-                            (sign_query_params, cgi.escape(guestbook_name),
-                             url, url_linktext))
+        template_values = {
+            'greetings': greetings,
+            'guestbook_name': urllib.quote_plus(guestbook_name),
+            'url': url,
+            'url_linktext': url_linktext,
+        }
+
+        template = JINJA_ENVIRONMENT.get_template('index.html')
+        self.response.write(template.render(template_values))
 # [END main_page]
+
 
 # [START guestbook]
 class Guestbook(webapp2.RequestHandler):
