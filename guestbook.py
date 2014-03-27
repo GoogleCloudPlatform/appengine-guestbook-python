@@ -36,13 +36,13 @@ DEFAULT_GUESTBOOK_NAME = 'default_guestbook'
 # However, the write rate should be limited to ~1/second.
 
 def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
-    """Constructs a Datastore key for a Guestbook entity with guestbook_name."""
+    # Constructs a Datastore key for a Guestbook entity with guestbook_name.
     return ndb.Key('Guestbook', guestbook_name)
 
 
 # [START greeting]
 class Greeting(ndb.Model):
-    """Models an individual Guestbook entry with author, content, and date."""
+    # Models a Guestbook entry with author, content, and date.
     author = ndb.UserProperty()
     content = ndb.StringProperty(indexed=False)
     date = ndb.DateTimeProperty(auto_now_add=True)
