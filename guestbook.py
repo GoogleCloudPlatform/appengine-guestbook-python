@@ -1,4 +1,4 @@
-
+# [START imports]
 import os
 import urllib
 
@@ -13,7 +13,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
-
+# [END imports]
 
 DEFAULT_GUESTBOOK_NAME = 'default_guestbook'
 
@@ -34,7 +34,7 @@ class Greeting(ndb.Model):
     date = ndb.DateTimeProperty(auto_now_add=True)
 
 
-
+# [START main_page]
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
@@ -60,7 +60,7 @@ class MainPage(webapp2.RequestHandler):
 
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render(template_values))
-
+# [END main_page]
 
 
 class Guestbook(webapp2.RequestHandler):
