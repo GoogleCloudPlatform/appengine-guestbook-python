@@ -2,9 +2,9 @@ import cgi
 import urllib
 
 from google.appengine.api import users
-
+# [START import_ndb]
 from google.appengine.ext import ndb
-
+# [END import_ndb]
 
 import webapp2
 
@@ -40,16 +40,16 @@ def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
     return ndb.Key('Guestbook', guestbook_name)
 
 
-
+# [START greeting]
 class Greeting(ndb.Model):
     """Models an individual Guestbook entry with author, content, and date."""
     author = ndb.UserProperty()
     content = ndb.StringProperty(indexed=False)
     date = ndb.DateTimeProperty(auto_now_add=True)
+# [END greeting]
 
 
-
-
+# [START main_page]
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
@@ -62,11 +62,11 @@ class MainPage(webapp2.RequestHandler):
         # consistent. If we omitted the ancestor from this query there would be
         # a slight chance that Greeting that had just been written would not
         # show up in a query.
-
+        # [START query]
         greetings_query = Greeting.query(
             ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
         greetings = greetings_query.fetch(10)
-
+        # [END query]
 
         for greeting in greetings:
             if greeting.author:
@@ -89,10 +89,10 @@ class MainPage(webapp2.RequestHandler):
         self.response.write(MAIN_PAGE_FOOTER_TEMPLATE %
                             (sign_query_params, cgi.escape(guestbook_name),
                              url, url_linktext))
+# [END main_page]
 
 
-
-
+# [START guestbook]
 class Guestbook(webapp2.RequestHandler):
 
     def post(self):
@@ -112,7 +112,7 @@ class Guestbook(webapp2.RequestHandler):
 
         query_params = {'guestbook_name': guestbook_name}
         self.redirect('/?' + urllib.urlencode(query_params))
-
+# [END guestbook]
 
 
 application = webapp2.WSGIApplication([
