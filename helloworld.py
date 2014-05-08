@@ -7,6 +7,7 @@ class MainPage(webapp2.RequestHandler):
 
     def get(self):
         # [START get_current_user]
+        # Checks for active Google account session
         user = users.get_current_user()
         # [END get_current_user]
 
