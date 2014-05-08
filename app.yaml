@@ -4,9 +4,11 @@ runtime: python27
 api_version: 1
 threadsafe: true
 
+# [START handlers]
 handlers:
 - url: /.*
   script: guestbook.application
+# [END handlers]
 
 libraries:
 - name: webapp2
