@@ -10,6 +10,8 @@ handlers:
   script: guestbook.application
 # [END handlers]
 
+# [START libraries]
 libraries:
 - name: webapp2
   version: latest
+# [END libraries]
