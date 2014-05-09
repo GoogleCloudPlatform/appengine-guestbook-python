@@ -8,28 +8,22 @@ from google.appengine.ext import ndb
 
 import webapp2
 
-
 MAIN_PAGE_FOOTER_TEMPLATE = """\
     <form action="/sign?%s" method="post">
       <div><textarea name="content" rows="3" cols="60"></textarea></div>
       <div><input type="submit" value="Sign Guestbook"></div>
     </form>
-
     <hr>
-
-    <form>Guestbook name:
+stbook name:
       <input value="%s" name="guestbook_name">
       <input type="submit" value="switch">
     </form>
-
     <a href="%s">%s</a>
-
   </body>
 </html>
 """
 
 DEFAULT_GUESTBOOK_NAME = 'default_guestbook'
-
 
 # We set a parent key on the 'Greetings' to ensure that they are all in the same
 # entity group. Queries across the single entity group will be consistent.
@@ -39,7 +33,6 @@ def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
     """Constructs a Datastore key for a Guestbook entity with guestbook_name."""
     return ndb.Key('Guestbook', guestbook_name)
 
-
 # [START greeting]
 class Greeting(ndb.Model):
     """Models an individual Guestbook entry with author, content, and date."""
@@ -48,10 +41,8 @@ class Greeting(ndb.Model):
     date = ndb.DateTimeProperty(auto_now_add=True)
 # [END greeting]
 
-
 # [START main_page]
 class MainPage(webapp2.RequestHandler):
-
     def get(self):
         self.response.write('<html><body>')
         guestbook_name = self.request.get('guestbook_name',
@@ -91,10 +82,8 @@ class MainPage(webapp2.RequestHandler):
                              url, url_linktext))
 # [END main_page]
 
-
 # [START guestbook]
 class Guestbook(webapp2.RequestHandler):
-
     def post(self):
         # We set the same parent key on the 'Greeting' to ensure each Greeting
         # is in the same entity group. Queries across the single entity group
@@ -113,7 +102,6 @@ class Guestbook(webapp2.RequestHandler):
         query_params = {'guestbook_name': guestbook_name}
         self.redirect('/?' + urllib.urlencode(query_params))
 # [END guestbook]
-
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
