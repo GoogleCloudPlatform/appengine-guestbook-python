@@ -14,7 +14,7 @@ MAIN_PAGE_FOOTER_TEMPLATE = """\
       <div><input type="submit" value="Sign Guestbook"></div>
     </form>
     <hr>
-stbook name:
+    <form>Guestbook name:
       <input value="%s" name="guestbook_name">
       <input type="submit" value="switch">
     </form>
