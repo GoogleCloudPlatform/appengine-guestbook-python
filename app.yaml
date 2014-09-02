@@ -7,7 +7,7 @@ threadsafe: true
 # [START handlers]
 handlers:
 - url: /.*
-  script: guestbook.application
+  script: guestbook.app
 # [END handlers]
 
 # [START libraries]
