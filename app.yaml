@@ -9,7 +9,7 @@ handlers:
   static_dir: stylesheets
 
 - url: /.*
-  script: guestbook.app
+  script: guestbook.application
 
 libraries:
 - name: webapp2
