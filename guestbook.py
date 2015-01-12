@@ -36,7 +36,8 @@ def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
 # [START greeting]
 class Greeting(ndb.Model):
     """Models an individual Guestbook entry."""
-    author = ndb.StringProperty(indexed=False)
+    author_id = ndb.StringProperty(indexed=False)
+    author_email = ndb.StringProperty(indexed=False)
     content = ndb.StringProperty(indexed=False)
     date = ndb.DateTimeProperty(auto_now_add=True)
 # [END greeting]
@@ -59,15 +60,19 @@ class MainPage(webapp2.RequestHandler):
         greetings = greetings_query.fetch(10)
         # [END query]
 
+        user = users.get_current_user()
         for greeting in greetings:
-            if greeting.author:
-                self.response.write('<b>%s</b> wrote:' % greeting.author)
+            if greeting.author_email:
+                author = greeting.author_email
+                if user and user.user_id() == greeting.author_id:
+                    author += '(You)'
+                self.response.write('<b>%s</b> wrote:' % author)
             else:
                 self.response.write('An anonymous person wrote:')
             self.response.write('<blockquote>%s</blockquote>' %
                                 cgi.escape(greeting.content))
 
-        if users.get_current_user():
+        if user:
             url = users.create_logout_url(self.request.uri)
             url_linktext = 'Logout'
         else:
@@ -93,7 +98,8 @@ class Guestbook(webapp2.RequestHandler):
         greeting = Greeting(parent=guestbook_key(guestbook_name))
 
         if users.get_current_user():
-            greeting.author = users.get_current_user().nickname()
+            greeting.author_id = users.get_current_user().user_id()
+            greeting.author_email = users.get_current_user().email()
 
         greeting.content = self.request.get('content')
         greeting.put()
