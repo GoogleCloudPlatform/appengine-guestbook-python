@@ -4,7 +4,7 @@
   <body>
     {% for greeting in greetings %}
       {% if greeting.author %}
-        <b>{{ greeting.author.nickname() }}</b> wrote:
+        <b>{{ greeting.author }}</b> wrote:
       {% else %}
        An anonymous person wrote:
       {% endif %}

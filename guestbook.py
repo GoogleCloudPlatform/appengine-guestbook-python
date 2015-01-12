@@ -29,7 +29,7 @@ def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
 
 class Greeting(ndb.Model):
     """Models an individual Guestbook entry with author, content, and date."""
-    author = ndb.UserProperty()
+    author = ndb.StringProperty(indexed=False)
     content = ndb.StringProperty(indexed=False)
     date = ndb.DateTimeProperty(auto_now_add=True)
 
@@ -75,7 +75,7 @@ class Guestbook(webapp2.RequestHandler):
         greeting = Greeting(parent=guestbook_key(guestbook_name))
 
         if users.get_current_user():
-            greeting.author = users.get_current_user()
+            greeting.author = users.get_current_user().nickname()
 
         greeting.content = self.request.get('content')
         greeting.put()
