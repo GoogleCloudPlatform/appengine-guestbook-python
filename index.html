@@ -8,8 +8,12 @@
   <!-- [END head_html] -->
   <body>
     {% for greeting in greetings %}
-      {% if greeting.author %}
-        <b>{{ greeting.author }}</b> wrote:
+      {% if greeting.author_email %}
+        <b>{{ greeting.author_email }}
+          {% if user and user.user_id() == greeting.author_id %}
+            (You)
+          {% endif %}
+        </b> wrote:
       {% else %}
        An anonymous person wrote:
       {% endif %}
