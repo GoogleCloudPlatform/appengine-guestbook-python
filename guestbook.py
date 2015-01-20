@@ -33,14 +33,21 @@ def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
     """Constructs a Datastore key for a Guestbook entity with guestbook_name."""
     return ndb.Key('Guestbook', guestbook_name)
 
+
 # [START greeting]
+class Author(ndb.Model):
+    """Sub model for representing an author."""
+    id = ndb.StringProperty(indexed=False)
+    email = ndb.StringProperty(indexed=False)
+
+
 class Greeting(ndb.Model):
     """Models an individual Guestbook entry."""
-    author_id = ndb.StringProperty(indexed=False)
-    author_email = ndb.StringProperty(indexed=False)
+    author = ndb.StructuredProperty(Author)
     content = ndb.StringProperty(indexed=False)
     date = ndb.DateTimeProperty(auto_now_add=True)
 # [END greeting]
+
 
 # [START main_page]
 class MainPage(webapp2.RequestHandler):
@@ -62,10 +69,10 @@ class MainPage(webapp2.RequestHandler):
 
         user = users.get_current_user()
         for greeting in greetings:
-            if greeting.author_email:
-                author = greeting.author_email
-                if user and user.user_id() == greeting.author_id:
-                    author += '(You)'
+            if greeting.author:
+                author = greeting.author.email
+                if user and user.user_id() == greeting.author.id:
+                    author += ' (You)'
                 self.response.write('<b>%s</b> wrote:' % author)
             else:
                 self.response.write('An anonymous person wrote:')
@@ -98,8 +105,9 @@ class Guestbook(webapp2.RequestHandler):
         greeting = Greeting(parent=guestbook_key(guestbook_name))
 
         if users.get_current_user():
-            greeting.author_id = users.get_current_user().user_id()
-            greeting.author_email = users.get_current_user().email()
+            author = Author(id=users.get_current_user().user_id(),
+                            email=users.get_current_user().email())
+            greeting.author = author
 
         greeting.content = self.request.get('content')
         greeting.put()
