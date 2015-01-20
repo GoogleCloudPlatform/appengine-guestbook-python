@@ -3,9 +3,9 @@
 <html>
   <body>
     {% for greeting in greetings %}
-      {% if greeting.author_email %}
-        <b>{{ greeting.author_email }}
-          {% if user and user.user_id() == greeting.author_id %}
+      {% if greeting.author %}
+        <b>{{ greeting.author.email }}
+          {% if user and user.user_id() == greeting.author.identity %}
             (You)
           {% endif %}
         </b> wrote:
