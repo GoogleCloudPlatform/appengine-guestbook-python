@@ -37,7 +37,7 @@ def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
 # [START greeting]
 class Author(ndb.Model):
     """Sub model for representing an author."""
-    id = ndb.StringProperty(indexed=False)
+    identity = ndb.StringProperty(indexed=False)
     email = ndb.StringProperty(indexed=False)
 
 
@@ -71,7 +71,7 @@ class MainPage(webapp2.RequestHandler):
         for greeting in greetings:
             if greeting.author:
                 author = greeting.author.email
-                if user and user.user_id() == greeting.author.id:
+                if user and user.user_id() == greeting.author.identity:
                     author += ' (You)'
                 self.response.write('<b>%s</b> wrote:' % author)
             else:
@@ -105,7 +105,7 @@ class Guestbook(webapp2.RequestHandler):
         greeting = Greeting(parent=guestbook_key(guestbook_name))
 
         if users.get_current_user():
-            author = Author(id=users.get_current_user().user_id(),
+            author = Author(identity=users.get_current_user().user_id(),
                             email=users.get_current_user().email())
             greeting.author = author
 
