@@ -1,12 +1,13 @@
-application: your-app-id
 version: 1
 runtime: python27
 api_version: 1
 threadsafe: true
 
+# [START handlers]
 handlers:
 - url: /.*
-  script: guestbook.application
+  script: guestbook.app
+# [END handlers]
 
 # [START libraries]
 libraries:
