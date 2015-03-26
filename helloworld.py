@@ -22,6 +22,6 @@ class MainPage(webapp2.RequestHandler):
         # [END if_not_user]
 
 
-application = webapp2.WSGIApplication([
+app = webapp2.WSGIApplication([
     ('/', MainPage),
 ], debug=True)
