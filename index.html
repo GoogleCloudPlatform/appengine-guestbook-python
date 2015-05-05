@@ -51,7 +51,11 @@
       {% for greeting in greetings %}
       <div class="row">
         {% if greeting.author %}
-          <b>{{ greeting.author.nickname() }}</b> wrote:
+          <b>{{ greeting.author.email }}
+            {% if user and user.user_id() == greeting.author.identity %}
+              (You)
+            {% endif %}
+          </b> wrote:
         {% else %}
          An anonymous person wrote:
         {% endif %}
@@ -59,12 +63,20 @@
       </div>
       {% endfor %}
 
-      <form action="/sign" method="post">
+      <form action="/sign?guestbook_name={{ guestbook_name }}" method="post">
         <div><textarea name="content" class="input-block-level" rows="3"></textarea></div>
         <div><input type="submit" class="btn btn-large btn-primary" value="Sign Guestbook"></div>
       </form>
 
-        </div>
+      <hr>
+
+      <form>Guestbook name:
+        <input value="{{ guestbook_name }}" name="guestbook_name">
+        <input type="submit" value="switch">
+      </form>
+
+      <a href="{{ url|safe }}">{{ url_linktext }}</a>
+    </div>
   </body>
 </html>
 {% endautoescape %}
