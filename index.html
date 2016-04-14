@@ -2,8 +2,10 @@
 {% autoescape true %}
 <html>
   <head>
+    <!-- [START css] -->
     <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <!-- [END css] -->
     <style type="text/css">
       body {
         padding-top: 40px;
@@ -47,7 +49,7 @@
       </div>
     </div>
     <div class="container">
-
+      <!-- [START greetings] -->
       {% for greeting in greetings %}
       <div class="row">
         {% if greeting.author %}
@@ -62,6 +64,7 @@
         <blockquote>{{ greeting.content }}</blockquote>
       </div>
       {% endfor %}
+      <!-- [END greetings] -->
 
       <form action="/sign?guestbook_name={{ guestbook_name }}" method="post">
         <div><textarea name="content" class="input-block-level" rows="3"></textarea></div>
