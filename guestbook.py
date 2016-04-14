@@ -1,3 +1,4 @@
+# [START imports]
 import os
 import urllib
 
@@ -11,6 +12,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
+# [END imports]
 
 DEFAULT_GUESTBOOK_NAME = 'default_guestbook'
 
@@ -28,6 +30,7 @@ def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
     return ndb.Key('Guestbook', guestbook_name)
 
 
+# [START greeting]
 class Author(ndb.Model):
     """Sub model for representing an author."""
     identity = ndb.StringProperty(indexed=False)
@@ -39,8 +42,10 @@ class Greeting(ndb.Model):
     author = ndb.StructuredProperty(Author)
     content = ndb.StringProperty(indexed=False)
     date = ndb.DateTimeProperty(auto_now_add=True)
+# [END greeting]
 
 
+# [START main_page]
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
@@ -68,8 +73,10 @@ class MainPage(webapp2.RequestHandler):
 
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render(template_values))
+# [END main_page]
 
 
+# [START guestbook]
 class Guestbook(webapp2.RequestHandler):
 
     def post(self):
@@ -92,9 +99,12 @@ class Guestbook(webapp2.RequestHandler):
 
         query_params = {'guestbook_name': guestbook_name}
         self.redirect('/?' + urllib.urlencode(query_params))
+# [END guestbook]
 
 
+# [START app]
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/sign', Guestbook),
 ], debug=True)
+# [END app]
