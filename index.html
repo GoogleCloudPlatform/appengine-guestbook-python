@@ -55,7 +55,8 @@
       </div>
       <!-- [END greetings] -->
 
-      <form method="post">
+      <form action="guestbook" method="post" id="gbsubmit">
+        <input value="{{ guestbook_name }}" name="guestbook_name" type="hidden">
         <div><textarea name="content" class="input-block-level" rows="3"></textarea></div>
         <div><input type="submit" class="btn btn-large btn-primary" value="Sign Guestbook"></div>
       </form>
@@ -70,6 +71,7 @@
       <a href="{{ url|safe }}">{{ url_linktext }}</a>
     </div>
     <script nonce="{{ nonce }}">
+      var submit = document.getElementById("gbsubmit");
       var name = document.getElementById("gbname");
       var form = document.getElementById("gbform");
       var row = document.getElementById("gbrow");
@@ -77,6 +79,7 @@
       var table = row.parentNode;
       function updateGuestbook() {
         var url = "?guestbook_name="+encodeURIComponent(gbname.value);
+        submit.elements.guestbook_name.value = gbname.value;
         history.pushState(null, "", url);
         // Remove old rows.
         rows.forEach(r=>r.parentNode.removeChild(r));
