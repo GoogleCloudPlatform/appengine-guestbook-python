@@ -76,7 +76,7 @@
       var table = row.parentNode;
       function updateGuestbook() {
         var url = "?guestbook_name="+encodeURIComponent(gbname.value);
-        history.pushState(url, url);
+        history.pushState(null, "", url);
         fetch("/guestbook" + url, {credentials: "include"}).then(r=>r.json()).then(j=>{
           j.forEach(m=>{
             var elem = table.insertBefore(row.cloneNode(true), table.firstChild);
