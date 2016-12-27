@@ -98,7 +98,8 @@ class Guestbook(webapp2.RequestHandler):
         greetings_query = Greeting.query(
             ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
         greetings = greetings_query.fetch(10)
-        self.response.write(simplejson.dumps(({"content": g.content} for g in greetings), cls=simplejson.encoder.JSONEncoderForHTML))
+        self.response.write(simplejson.dumps(list({"content": g.content} for g in greetings),
+                                             cls=simplejson.encoder.JSONEncoderForHTML))
 
     def post(self):
         # We set the same parent key on the 'Greeting' to ensure each
