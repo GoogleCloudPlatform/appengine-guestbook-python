@@ -1,0 +1,4 @@
+cron:
+- description: daily purge
+  url: /tasks/purge
+  schedule: every 24 hours
