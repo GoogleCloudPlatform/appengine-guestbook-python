@@ -78,7 +78,7 @@
       function updateGuestbook() {
         var url = "?guestbook_name="+encodeURIComponent(gbname.value);
         history.pushState(url, url);
-        fetch("/guestbook" + url).then(r=>r.json()).then(j=>{
+        fetch("/guestbook" + url, {credentials: "include"}).then(r=>r.json()).then(j=>{
           j.forEach(m=>{
             var elem = table.insertBefore(row.cloneNode(true), table.firstChild);
             // Note this is an XSS.
