@@ -83,11 +83,10 @@ class MainPage(webapp2.RequestHandler):
 
         template_values = {
             'user': user,
-            'greetings': greetings,
             'guestbook_name': urllib.quote_plus(guestbook_name),
             'url': url,
             'url_linktext': url_linktext,
-            'nonce': ''.join(random.choice('abcdefghijklmnopqrstuvwxyz') for i in range(8))
+            'nonce': ''.join(random.choice('abcdefghijklmnopqrstuvwxyz') for i in range(8)),
         }
 
         template = JINJA_ENVIRONMENT.get_template('index.html')
