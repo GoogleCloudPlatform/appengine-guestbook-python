@@ -11,8 +11,13 @@ handlers:
 - url: /bootstrap
   static_dir: bootstrap
 
+- url: /tasks/.*
+  script: guestbook.app
+  login: admin
+
 - url: /.*
   script: guestbook.app
+
 # [END handlers]
 
 # [START libraries]
