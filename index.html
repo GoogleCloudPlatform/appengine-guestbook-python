@@ -52,7 +52,7 @@
     <div class="container">
       <!-- [START greetings] -->
       <div class="row" id="gbrow">
-        <blockquote>Loading guestbook comments...</blockquote>
+        <blockquote></blockquote>
       </div>
       <!-- [END greetings] -->
 
@@ -79,14 +79,13 @@
         var url = "?guestbook_name="+encodeURIComponent(gbname.value);
         history.pushState(url, url);
         fetch("/guestbook" + url).then(r=>r.json()).then(j=>{
-          table.innerHTML="";
           j.forEach(m=>{
-            var elem = table.appendChild(row.cloneNode(true));
+            var elem = table.insertBefore(row.cloneNode(true), table.firstChild);
             // Note this is an XSS.
             elem.getElementsByTagName("blockquote")[0].innerHTML=m.content;
           });
         }).catch(e=>{
-          row.innerHTML="Error loading guestbook comments.";
+          alert("Error loading guestbook comments");
         });
         return false;
       }
