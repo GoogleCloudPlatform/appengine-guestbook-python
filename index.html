@@ -84,6 +84,7 @@
         fetch("/guestbook" + url, {credentials: "include"}).then(r=>r.json()).then(j=>{
           j.forEach(m=>{
             var elem = table.insertBefore(row.cloneNode(true), table.firstChild);
+            rows.push(elem);
             // Note this is an XSS.
             elem.getElementsByTagName("blockquote")[0].innerHTML=m.content;
           });
