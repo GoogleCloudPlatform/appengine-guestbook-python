@@ -16,6 +16,7 @@
 
 # [START imports]
 import os
+import random
 import urllib
 
 from google.appengine.api import users
@@ -65,6 +66,7 @@ class Greeting(ndb.Model):
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
+        random.seed(os.urandom(8))
         guestbook_name = self.request.get('guestbook_name',
                                           DEFAULT_GUESTBOOK_NAME)
         greetings_query = Greeting.query(
@@ -85,6 +87,7 @@ class MainPage(webapp2.RequestHandler):
             'guestbook_name': urllib.quote_plus(guestbook_name),
             'url': url,
             'url_linktext': url_linktext,
+            'nonce': ''.join(random.choice('abcdefghijklmnopqrstuvwxyz') for i in range(8))
         }
 
         template = JINJA_ENVIRONMENT.get_template('index.html')
