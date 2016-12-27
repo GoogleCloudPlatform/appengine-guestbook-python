@@ -23,6 +23,7 @@ from google.appengine.api import users
 from google.appengine.ext import ndb
 
 import jinja2
+import simplejson
 import webapp2
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -69,10 +70,6 @@ class MainPage(webapp2.RequestHandler):
         random.seed(os.urandom(8))
         guestbook_name = self.request.get('guestbook_name',
                                           DEFAULT_GUESTBOOK_NAME)
-        greetings_query = Greeting.query(
-            ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
-        greetings = greetings_query.fetch(10)
-
         user = users.get_current_user()
         if user:
             url = users.create_logout_url(self.request.uri)
@@ -93,9 +90,15 @@ class MainPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 # [END main_page]
 
-
 # [START guestbook]
 class Guestbook(webapp2.RequestHandler):
+    def get(self):
+        guestbook_name = self.request.get('guestbook_name',
+                                          DEFAULT_GUESTBOOK_NAME)
+        greetings_query = Greeting.query(
+            ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
+        greetings = greetings_query.fetch(10)
+        self.response.write(simplejson.dumps(greetings, cls=simplejson.encoder.JSONEncoderForHTML))
 
     def post(self):
         # We set the same parent key on the 'Greeting' to ensure each
@@ -123,6 +126,6 @@ class Guestbook(webapp2.RequestHandler):
 # [START app]
 app = webapp2.WSGIApplication([
     ('/', MainPage),
-    ('/sign', Guestbook),
+    ('/guestbook', Guestbook),
 ], debug=True)
 # [END app]
