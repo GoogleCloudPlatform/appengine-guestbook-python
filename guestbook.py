@@ -127,7 +127,7 @@ class Guestbook(webapp2.RequestHandler):
 # [START purge]
 class Purge(webapp2.RequestHandler):
     def post(self):
-        greetings_query = Greeting.query(keys_only=True)
+        greetings_query = Greeting.query().fetch(1000, keys_only=True)
         ndb.delete_multi(list(greetings_query))
             
 # [END purge]
