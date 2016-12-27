@@ -68,6 +68,7 @@ class MainPage(webapp2.RequestHandler):
 
     def get(self):
         random.seed(os.urandom(8))
+        nonce = ''.join(random.choice('abcdefghijklmnopqrstuvwxyz') for i in range(8))
         guestbook_name = self.request.get('guestbook_name',
                                           DEFAULT_GUESTBOOK_NAME)
         user = users.get_current_user()
@@ -83,10 +84,11 @@ class MainPage(webapp2.RequestHandler):
             'guestbook_name': urllib.quote_plus(guestbook_name),
             'url': url,
             'url_linktext': url_linktext,
-            'nonce': ''.join(random.choice('abcdefghijklmnopqrstuvwxyz') for i in range(8)),
+            'nonce': nonce,
         }
 
         template = JINJA_ENVIRONMENT.get_template('index.html')
+        self.response.headers.add("Content-Security-Policy","script-src 'nonce-%s'; object-src 'none'"%nonce)
         self.response.write(template.render(template_values))
 # [END main_page]
 
