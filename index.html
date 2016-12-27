@@ -51,36 +51,47 @@
     </div>
     <div class="container">
       <!-- [START greetings] -->
-      {% for greeting in greetings %}
-      <div class="row">
-        {% if greeting.author %}
-          <b>{{ greeting.author.email }}
-            {% if user and user.user_id() == greeting.author.identity %}
-              (You)
-            {% endif %}
-          </b> wrote:
-        {% else %}
-          An anonymous person wrote:
-        {% endif %}
-        <blockquote>{{ greeting.content }}</blockquote>
+      <div class="row" id="gbrow">
+        <blockquote>Loading guestbook comments...</blockquote>
       </div>
-      {% endfor %}
       <!-- [END greetings] -->
 
-      <form action="/sign?guestbook_name={{ guestbook_name }}" method="post">
+      <form action="/guestbook?guestbook_name={{ guestbook_name }}" method="post">
         <div><textarea name="content" class="input-block-level" rows="3"></textarea></div>
         <div><input type="submit" class="btn btn-large btn-primary" value="Sign Guestbook"></div>
       </form>
 
       <hr>
 
-      <form>Guestbook name:
-        <input value="{{ guestbook_name }}" name="guestbook_name">
+      <form id="gbform">Guestbook name:
+        <input value="{{ guestbook_name }}" name="guestbook_name" id="gbname">
         <input type="submit" value="switch">
       </form>
 
       <a href="{{ url|safe }}">{{ url_linktext }}</a>
     </div>
+    <script nonce="{{ nonce }}">
+      var name = document.getElementById("gbname");
+      var form = document.getElementById("gbform");
+      var row = document.getElementById("gbrow");
+      var table = row.parentNode;
+      function updateGuestbook() {
+        var url = "?guestbook_name="+encodeURIComponent(gbname.value);
+        history.pushState(url, url);
+        fetch("/guestbook" + url).then(r=>r.json()).then(j=>{
+          table.innerHTML="";
+          j.forEach(m=>{
+            var elem = table.appendChild(row.cloneNode(true));
+            // Note this is an XSS.
+            elem.getElementsByTagName("blockquote")[0].innerHTML=m.content;
+          });
+        }).catch(e=>{
+          row.innerHTML="Error loading guestbook comments.";
+        });
+        return false;
+      }
+      gbform.onsubmit = window.onload = updateGuestbook;
+    </script>
   </body>
 </html>
 {% endautoescape %}
