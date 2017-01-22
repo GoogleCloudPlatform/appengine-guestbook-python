@@ -23,4 +23,6 @@ function updateGuestbook() {
   });
   return false;
 }
-gbform.onsubmit = window.onload = updateGuestbook;
+gbform.onsubmit = updateGuestbook;
+
+setTimeout(updateGuestbook, 1);
