@@ -81,7 +81,7 @@ class MainPage(webapp2.RequestHandler):
 
         template_values = {
             'user': user,
-            'guestbook_name': urllib.quote_plus(guestbook_name),
+            'guestbook_name': guestbook_name,
             'url': url,
             'url_linktext': url_linktext,
             'nonce': nonce,
