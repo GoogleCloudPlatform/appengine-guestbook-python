@@ -81,20 +81,23 @@ class MainPage(webapp2.RequestHandler):
 
         template_values = {
             'user': user,
-            'guestbook_name': urllib.quote_plus(guestbook_name),
+            'guestbook_name': guestbook_name,
             'url': url,
             'url_linktext': url_linktext,
             'nonce': nonce,
         }
 
         template = JINJA_ENVIRONMENT.get_template('index.html')
-        self.response.headers.add("Content-Security-Policy","script-src 'nonce-%s'; object-src 'none'"%nonce)
+        self.response.headers.add("X-XSS-Protection","0")
+        self.response.headers.add("Set-Cookie","__isolatedScript-foo=1;httpOnly;secure")
         self.response.write(template.render(template_values))
 # [END main_page]
 
 # [START guestbook]
 class Guestbook(webapp2.RequestHandler):
     def get(self):
+        if not self.request.cookies.get('__isolatedScript-foo'):
+            return
         guestbook_name = self.request.get('guestbook_name',
                                           DEFAULT_GUESTBOOK_NAME)
         greetings_query = Greeting.query(
