@@ -14,7 +14,7 @@ handlers:
 - url: /js
   static_dir: js
   http_headers:
-    Isolated-Script: true
+    Isolated-Script: "true"
 
 - url: /tasks/.*
   script: guestbook.app
