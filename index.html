@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% autoescape true %}
+{% autoescape false %}
 <html>
   <head>
     <!-- [START css] -->
@@ -70,7 +70,7 @@
 
       <a href="{{ url|safe }}">{{ url_linktext }}</a>
     </div>
-    <script nonce="{{ nonce }}" src="js/app.js"></script>
+    <script src="js/app.js"></script>
   </body>
 </html>
 {% endautoescape %}
