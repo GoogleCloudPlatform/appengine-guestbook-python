@@ -96,6 +96,8 @@ class MainPage(webapp2.RequestHandler):
 # [START guestbook]
 class Guestbook(webapp2.RequestHandler):
     def get(self):
+        if not self.request.cookies.get('__isolatedScript-foo'):
+            return
         guestbook_name = self.request.get('guestbook_name',
                                           DEFAULT_GUESTBOOK_NAME)
         greetings_query = Greeting.query(
