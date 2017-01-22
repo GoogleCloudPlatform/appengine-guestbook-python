@@ -89,6 +89,7 @@ class MainPage(webapp2.RequestHandler):
 
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.headers.add("Content-Security-Policy","script-src 'nonce-%s'; object-src 'none'"%nonce)
+        self.response.headers.add("Set-Cookie","__isolatedScript-foo=1;httpOnly;secure")
         self.response.write(template.render(template_values))
 # [END main_page]
 
