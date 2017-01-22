@@ -11,6 +11,11 @@ handlers:
 - url: /bootstrap
   static_dir: bootstrap
 
+- url: /js
+  static_dir: js
+  http_headers:
+    Isolated-Script: true
+
 - url: /tasks/.*
   script: guestbook.app
   login: admin
