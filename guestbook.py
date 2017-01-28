@@ -96,15 +96,22 @@ class MainPage(webapp2.RequestHandler):
 # [START guestbook]
 class Guestbook(webapp2.RequestHandler):
     def get(self):
-        if not self.request.cookies.get('__isolatedScript-foo'):
-            return
         guestbook_name = self.request.get('guestbook_name',
                                           DEFAULT_GUESTBOOK_NAME)
-        greetings_query = Greeting.query(
-            ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
-        greetings = greetings_query.fetch(10)
-        self.response.write(simplejson.dumps(list({"content": g.content} for g in greetings),
-                                             cls=simplejson.encoder.JSONEncoderForHTML))
+        greetings = []
+        if self.request.cookies.get('__isolatedScript-foo'):
+            greetings_query = Greeting.query(
+                ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
+            greetings = greetings_query.fetch(10)
+        greetings_json = simplejson.dumps(
+            list({"content": g.content} for g in greetings))
+        callback = self.request.get('callback')
+        if callback:
+            self.response.headers.add("Content-Type","text/javascript")
+            # This is JS injection
+            self.response.write('%s(%s)'%(callback, greetings_json))
+        else:
+            self.response.write(greetings_json)
 
     def post(self):
         # We set the same parent key on the 'Greeting' to ensure each
