@@ -1,6 +1,7 @@
 runtime: python27
 api_version: 1
 threadsafe: true
+default_expiration: "0"
 
 # [START handlers]
 handlers:
@@ -11,8 +12,18 @@ handlers:
 - url: /bootstrap
   static_dir: bootstrap
 
+- url: /js
+  static_dir: js
+  http_headers:
+    Isolated-Script: "true"
+
+- url: /tasks/.*
+  script: guestbook.app
+  login: admin
+
 - url: /.*
   script: guestbook.app
+
 # [END handlers]
 
 # [START libraries]

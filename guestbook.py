@@ -16,12 +16,14 @@
 
 # [START imports]
 import os
+import random
 import urllib
 
 from google.appengine.api import users
 from google.appengine.ext import ndb
 
 import jinja2
+import simplejson
 import webapp2
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -65,12 +67,10 @@ class Greeting(ndb.Model):
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
+        random.seed(os.urandom(8))
+        nonce = ''.join(random.choice('abcdefghijklmnopqrstuvwxyz') for i in range(8))
         guestbook_name = self.request.get('guestbook_name',
                                           DEFAULT_GUESTBOOK_NAME)
-        greetings_query = Greeting.query(
-            ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
-        greetings = greetings_query.fetch(10)
-
         user = users.get_current_user()
         if user:
             url = users.create_logout_url(self.request.uri)
@@ -81,19 +81,37 @@ class MainPage(webapp2.RequestHandler):
 
         template_values = {
             'user': user,
-            'greetings': greetings,
-            'guestbook_name': urllib.quote_plus(guestbook_name),
+            'guestbook_name': guestbook_name,
             'url': url,
             'url_linktext': url_linktext,
+            'nonce': nonce,
         }
 
         template = JINJA_ENVIRONMENT.get_template('index.html')
+        self.response.headers.add("X-XSS-Protection","0")
+        self.response.headers.add("Set-Cookie","__isolatedScript-foo=1;httpOnly;secure")
         self.response.write(template.render(template_values))
 # [END main_page]
 
-
 # [START guestbook]
 class Guestbook(webapp2.RequestHandler):
+    def get(self):
+        guestbook_name = self.request.get('guestbook_name',
+                                          DEFAULT_GUESTBOOK_NAME)
+        greetings = []
+        if self.request.cookies.get('__isolatedScript-foo'):
+            greetings_query = Greeting.query(
+                ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
+            greetings = greetings_query.fetch(10)
+        greetings_json = simplejson.dumps(
+            list({"content": g.content} for g in greetings))
+        callback = self.request.get('callback')
+        if callback:
+            self.response.headers.add("Content-Type","text/javascript")
+            # This is JS injection
+            self.response.write('%s(%s)'%(callback, greetings_json))
+        else:
+            self.response.write(greetings_json)
 
     def post(self):
         # We set the same parent key on the 'Greeting' to ensure each
@@ -118,9 +136,20 @@ class Guestbook(webapp2.RequestHandler):
 # [END guestbook]
 
 
+# [START purge]
+class Purge(webapp2.RequestHandler):
+    def post(self):
+        greetings_query = Greeting.query().fetch(1000, keys_only=True)
+        ndb.delete_multi(list(greetings_query))
+            
+# [END purge]
+
+
 # [START app]
 app = webapp2.WSGIApplication([
     ('/', MainPage),
-    ('/sign', Guestbook),
+    ('/guestbook', Guestbook),
+    # Tasks
+    ('/tasks/purge', Purge),
 ], debug=True)
 # [END app]

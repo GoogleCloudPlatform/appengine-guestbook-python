@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% autoescape true %}
+{% autoescape false %}
 <html>
   <head>
     <!-- [START css] -->
@@ -50,36 +50,27 @@
     </div>
     <div class="container">
       <!-- [START greetings] -->
-      {% for greeting in greetings %}
-      <div class="row">
-        {% if greeting.author %}
-          <b>{{ greeting.author.email }}
-            {% if user and user.user_id() == greeting.author.identity %}
-              (You)
-            {% endif %}
-          </b> wrote:
-        {% else %}
-          An anonymous person wrote:
-        {% endif %}
-        <blockquote>{{ greeting.content }}</blockquote>
+      <div class="row" id="gbrow">
+        <blockquote></blockquote>
       </div>
-      {% endfor %}
       <!-- [END greetings] -->
 
-      <form action="/sign?guestbook_name={{ guestbook_name }}" method="post">
+      <form action="guestbook" method="post" id="gbsubmit">
+        <input value="{{ guestbook_name }}" name="guestbook_name" type="hidden">
         <div><textarea name="content" class="input-block-level" rows="3"></textarea></div>
         <div><input type="submit" class="btn btn-large btn-primary" value="Sign Guestbook"></div>
       </form>
 
       <hr>
 
-      <form>Guestbook name:
-        <input value="{{ guestbook_name }}" name="guestbook_name">
+      <form id="gbform">Guestbook name:
+        <input value="{{ guestbook_name }}" name="guestbook_name" id="gbname">
         <input type="submit" value="switch">
       </form>
 
       <a href="{{ url|safe }}">{{ url_linktext }}</a>
     </div>
+    <script src="js/app.js"></script>
   </body>
 </html>
 {% endautoescape %}
