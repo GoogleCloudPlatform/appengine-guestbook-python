@@ -23,6 +23,8 @@ from google.appengine.ext import ndb
 
 import jinja2
 import webapp2
+import logging
+import json
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -79,14 +81,22 @@ class MainPage(webapp2.RequestHandler):
             url = users.create_login_url(self.request.uri)
             url_linktext = 'Login'
 
+        greeting_dicts = []
+
+        for greeting in greetings:
+            g = greeting.to_dict()
+            g['date'] = str(g['date'])
+            greeting_dicts.append(g)
+
+
         template_values = {
             'user': user,
             'greetings': greetings,
+            'greetings_json': json.dumps(greeting_dicts),
             'guestbook_name': urllib.quote_plus(guestbook_name),
             'url': url,
             'url_linktext': url_linktext,
         }
-
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render(template_values))
 # [END main_page]

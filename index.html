@@ -31,6 +31,11 @@
         overflow: scroll;
       }
     </style>
+    <script
+  src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.js" integrity="sha256-5Ud5lebnfqDOArqCr7p6w5KxX1dwXFcqiBw25dhhYFI=" crossorigin="anonymous"></script>
   </head>
   <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -80,6 +85,20 @@
 
       <a href="{{ url|safe }}">{{ url_linktext }}</a>
     </div>
+    <script id="greeting-template" type="text/x-handlebars-template">
+      <div class="row">
+        <h1>{{title}}</h1>
+        <div class="body">
+          {{body}}
+        </div>
+      </div>
+    </script>
+    <script>
+      var source   = $("#greeting-template").html();
+      var template = Handlebars.compile(source);
+      var greetingData = JSON.parse('{{greetings_json|safe}}');
+      console.log(greetingData);
+    </script>
   </body>
 </html>
 {% endautoescape %}
