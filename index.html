@@ -73,19 +73,18 @@
 
       <a href="{{ url|safe }}">{{ url_linktext }}</a>
     </div>
-    <script id="greeting-template" type="text/x-handlebars-template">
-      <div class="row">
-        <h1>{{title}}</h1>
-        <div class="body">
-          {{body}}
-        </div>
-      </div>
-    </script>
+    {% raw %}
+      <script id="greeting-template" type="text/x-handlebars-template">
+        <div class="row">
+          <h1>{{title}}</h1>
+      </script>
+    {% endraw %}
     <script>
       var source   = $("#greeting-template").html();
       var template = Handlebars.compile(source);
       var greetingData = JSON.parse('{{greetings_json|safe}}');
-      console.log(greetingData);
+
+      $('#greetings-container').append(template({title:'I am title'}));
     </script>
   </body>
 </html>
