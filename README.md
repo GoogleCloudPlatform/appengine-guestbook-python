@@ -41,7 +41,7 @@ To run:
 
 To manually run, install the requirements
 
-    pip install -r e2e/requirements-dev.txt
+    pip install -r ./e2e/requirements-dev.txt
 
 Set the environment variable to point to your deployed app:
 
