@@ -52,7 +52,7 @@ Finally, run the test
     python e2e/test_e2e.py
     
 ## Deploy to App Engine
-Deploy this from a terminal with the google cloud sdk installed.
+Deploy this from a terminal with the Google Cloud SDK installed.
 
 The index.yaml needs to be built first by running:
      
