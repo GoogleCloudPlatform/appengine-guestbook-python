@@ -1,8 +1,7 @@
-runtime: python27
-api_version: 1
-threadsafe: true
+runtime: python312
+app_engine_apis: true
+entrypoint: gunicorn -b :$PORT main:app
 
-# [START handlers]
 handlers:
 - url: /favicon\.ico
   static_files: favicon.ico
@@ -12,13 +11,8 @@ handlers:
   static_dir: bootstrap
 
 - url: /.*
-  script: guestbook.app
-# [END handlers]
+  script: auto
 
-# [START libraries]
-libraries:
-- name: webapp2
-  version: latest
-- name: jinja2
-  version: latest
-# [END libraries]
+automatic_scaling:
+  min_instances: 0
+  max_instances: 1
